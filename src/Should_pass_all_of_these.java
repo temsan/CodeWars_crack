@@ -9,7 +9,7 @@ public class Should_pass_all_of_these {
 
     @Test
     public void simple_test() {
-        assertEquals("Should work with simple PIN", "12345", objTF.crack("827ccb0eea8a706c4c34a16891f84e7b", 5));
+        assertEquals("Should work with simple PIN", "123456", objTF.crack("e10adc3949ba59abbe56e057f20f883e", 6));
     }
 
     @Test
