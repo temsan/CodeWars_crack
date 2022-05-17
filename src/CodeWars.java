@@ -1,41 +1,28 @@
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 public class CodeWars {
 
     public String crack(String hash, int length) {
 
-        //int length = 5;
+        // I tested with different lengths of the pin code, on my laptop I was able to crack only 6 characters
+        //long length = 5;
 
-        return IntStream.range(0, (int) Math.pow(10, length+1))
-                .boxed()
-                .parallel()
-                .collect(Collectors.toMap(num -> String.format("%0"+String.valueOf(length)+"d", num),
-                        num -> {
-                            try {
-                                return md5Hex(String.format("%0"+String.valueOf(length)+"d", num));
-                            } catch (NoSuchAlgorithmException e) {
-                                e.printStackTrace();
-                                return "";
-                            }
-                        }))
-                .entrySet().stream()
-                .parallel()
-                .filter(e -> e.getValue().equals(hash))
-                .peek(System.out::println)
-                .findAny().map(Map.Entry::getKey).orElse("Not found");
-
+        return LongStream.range(0, (int) Math.pow(10, length+1))
+                    .mapToObj(pin -> String.format("%0"+String.valueOf(length)+"d", pin))
+                    .parallel()
+                    .filter(pin -> md5Hex(pin).equals(hash))
+                    .peek(System.out::println)
+                    .findAny().orElse("Not found");
     }
 
-    private String md5Hex(String pin) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(pin.getBytes());
-        byte[]digest = md.digest();
-        BigInteger bigInt = new BigInteger(1,digest);
-        return bigInt.toString(16);
+    public String md5Hex(String pin) {
+        try {
+            return new BigInteger(1, MessageDigest.getInstance("MD5").digest(pin.getBytes())).toString(16);
+        } catch (NoSuchAlgorithmException e) {
+            return "";
+        }
     }
 }

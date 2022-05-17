@@ -9,11 +9,13 @@ public class Should_pass_all_of_these {
 
     @Test
     public void simple_test() {
-        assertEquals("Should work with simple PIN", "123456", objTF.crack("e10adc3949ba59abbe56e057f20f883e", 6));
+        String pin = "999999999";
+        assertEquals("Should work with simple PIN", pin, objTF.crack(objTF.md5Hex(pin), pin.length()));
     }
 
     @Test
     public void harder_test() {
-        assertEquals("Should work with harder PIN", "00078", objTF.crack("86aa400b65433b608a9db30070ec60cd", 5));
+        String pin = "00078";
+        assertEquals("Should work with harder PIN", pin, objTF.crack(objTF.md5Hex(pin), pin.length()));
     }
 }
